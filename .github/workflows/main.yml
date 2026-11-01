@@ -5,25 +5,20 @@ jobs:
   build-android:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
+      - uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
-
+          python-version: '3.9'  # 锁定 Python 3.9，提升兼容性
       - name: Install dependencies
         run: |
           sudo apt-get update
-          # 移除已失效的 openjdk-17-jdk 和 libtinfo5，并锁定兼容的构建依赖
-          sudo apt-get install -y git zip unzip openjdk-11-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev cmake libffi-dev libssl-dev
-          pip3 install --user --upgrade buildozer Cython==0.29.33 virtualenv
-
+          sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
+          pip3 install --user --upgrade buildozer Cython==0.29.34 virtualenv
       - name: Build with Buildozer
         run: |
           export PATH=$PATH:~/.local/bin
           yes | buildozer android debug
-
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
